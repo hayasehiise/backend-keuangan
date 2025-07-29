@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Char(36)
+  username  String   @unique
+  password  String
+  role      Role     @default(KASIR)
+  name      String
+  createdAt DateTime @default(now())
+
+  penjualan   Penjualan[]
+  pengeluaran Pengeluaran[]
+}
+
+enum Role {
+  ADMIN
+  OWNER
+  KASIR
+}
+
+model Produk {
+  id        String        @id @default(uuid()) @db.Char(36)
+  nama      String
+  harga     Int
+  stock     Int
+  status    Produk_Status
+  createdAt DateTime      @default(now())
+
+  penjualan Penjualan[]
+}
+
+enum Produk_Status {
+  TERSEDIA
+  STOK_HABIS
+}
+
+model Penjualan {
+  id        String   @id @default(uuid()) @db.Char(36)
+  produkId  String
+  date      DateTime
+  quantity  Int
+  diskon    Int
+  harga     Int
+  total     Int
+  createdBy String
+  createdAt DateTime @default(now())
+
+  produk Produk @relation(fields: [produkId], references: [id])
+  user   User   @relation(fields: [createdBy], references: [id])
+}
+
+model Pengeluaran {
+  id                 String   @id @default(uuid()) @db.Char(36)
+  tipe_pengeluaran   String
+  nominal            Int
+  date               DateTime
+  detail_pengeluaran String
+  createdBy          String
+  createdAt          DateTime @default(now())
+
+  user User @relation(fields: [createdBy], references: [id])
+}
+
+model ArusKas {
+  id                  String   @id @default(uuid()) @db.Char(36)
+  date                DateTime
+  saldo_awal          Int
+  sum_total_penjualan Int
+  sum_nilai_penjualan Int
+  sum_pengeluaran     Int
+  sebelum_pajak       Int
+  pajak               Int
+  laba_bersih         Int
+  createdAt           DateTime @default(now())
+}
