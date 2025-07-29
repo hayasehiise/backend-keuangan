@@ -13,7 +13,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserScheme, GetUserDto } from './dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserScheme,
+  QueryUserScheme,
+} from './dto/user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guard/roles.guard';
@@ -61,10 +65,8 @@ export class UserController {
 
   @Roles('ADMIN')
   @Get()
-  getUserPaginate(@Query() query: GetUserDto, @Req() req: any) {
-    const page = query.page ? parseInt(query.page) : 1;
-    const limit = query.limit ? parseInt(query.limit) : 3;
-
-    return this.userService.getUsersPaginate(page, limit, req.user);
+  getUsers(@Query() rawQuery: unknown, @Req() req: any) {
+    const query = QueryUserScheme.parse(rawQuery);
+    return this.userService.getUsers(query, req.user);
   }
 }

@@ -7,7 +7,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { CreateUserScheme, CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import {
+  CreateUserScheme,
+  CreateUserDto,
+  UpdateUserDto,
+  QueryUserDto,
+} from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -80,14 +85,14 @@ export class UserService {
     });
   }
 
-  async getUsersPaginate(page: number, limit: number, currentUser: any) {
-    const take = Number(limit);
-    const skip = (Number(page) - 1) * take;
+  async getUsers(query: QueryUserDto, currentUser: any) {
+    const { page, limit } = query;
+    const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({
         skip,
-        take,
+        take: limit,
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
@@ -105,12 +110,10 @@ export class UserService {
 
     return {
       data,
-      meta: {
-        total,
-        page: Number(page),
-        limit: Number(limit),
-        totalPage: Math.ceil(total / take),
-      },
+      total,
+      page,
+      limit,
+      totalPage: Math.ceil(total / limit),
     };
   }
 }
