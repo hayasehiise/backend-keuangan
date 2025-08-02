@@ -44,7 +44,7 @@ model Produk {
 
 enum Produk_Status {
   TERSEDIA
-  STOK_HABIS
+  HABIS
 }
 
 model Penjualan {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import {
@@ -10,8 +12,13 @@ import {
 export class ProdukService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: CreateProdukDto) {
-    return this.prisma.produk.create({ data });
+  async create(rawData: CreateProdukDto) {
+    await this.prisma.produk.create({ data: rawData });
+
+    return {
+      message: 'data produk berhasil diinput',
+      statusCode: 200,
+    };
   }
 
   async getProduk(query: QueryProdukDto) {
@@ -25,7 +32,7 @@ export class ProdukService {
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.user.count(),
+      this.prisma.produk.count(),
     ]);
     return {
       data,
@@ -36,37 +43,27 @@ export class ProdukService {
     };
   }
 
-  //   getProduk(query: QueryProdukDto) {
-  //     const { page, limit, search } = query;
-  //     const skip = (page - 1) * limit;
-
-  //     return this.prisma.produk.findMany({
-  //       where: search ? { nama: { contains: search } } : {},
-  //       skip,
-  //       take: limit,
-  //       orderBy: { createdAt: 'desc' },
-  //     });
-  //   }
-
-  //   async countAll(query: QueryProdukDto) {
-  //     const { search } = query;
-  //     return this.prisma.produk.count({
-  //       where: search ? { nama: { contains: search } } : {},
-  //     });
-  //   }
-
   findOne(id: string) {
     return this.prisma.produk.findUnique({ where: { id } });
   }
 
-  update(id: string, data: UpdateProdukDto) {
-    return this.prisma.produk.update({
+  async update(id: string, rawData: UpdateProdukDto) {
+    await this.prisma.produk.update({
       where: { id },
-      data,
+      data: rawData,
     });
+
+    return {
+      message: 'Data Produk berhasil diupdate',
+      statusCode: 200,
+    };
   }
 
-  remove(id: string) {
-    return this.prisma.produk.delete({ where: { id } });
+  async remove(id: string) {
+    await this.prisma.produk.delete({ where: { id } });
+    return {
+      message: 'Data Produk berhasil dihapus',
+      statusCode: 200,
+    };
   }
 }

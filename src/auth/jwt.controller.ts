@@ -1,6 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './jwt.service';
 import { LoginScheme, RegisterScheme } from './dto/auth.dto';
+import { JwtAuthGuard } from './jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -18,5 +28,11 @@ export class AuthController {
     const parsed = LoginScheme.safeParse(body);
     if (!parsed.success) throw parsed.error;
     return this.authService.login(parsed.data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('active')
+  getActive(@Request() req: any) {
+    return req.user;
   }
 }

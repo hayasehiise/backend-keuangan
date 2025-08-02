@@ -4,7 +4,7 @@ const BaseProdukScheme = z.object({
   nama: z.string().min(1),
   harga: z.number().int().nonnegative(),
   stock: z.number().int().nonnegative(),
-  status: z.enum(['TERSEDIA', 'STOK_HABIS']),
+  status: z.enum(['TERSEDIA', 'HABIS']),
 });
 
 export const CreateProdukScheme = BaseProdukScheme;
