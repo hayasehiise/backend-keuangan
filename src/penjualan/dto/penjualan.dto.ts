@@ -5,7 +5,6 @@ const BaseScheme = z.object({
   date: z.iso.datetime(),
   quantity: z.number().int().min(1),
   diskon: z.number().int().min(0).max(100),
-  harga: z.number().int().min(0),
   createdBy: z.uuid(),
 });
 
