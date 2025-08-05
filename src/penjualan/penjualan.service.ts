@@ -1,9 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import {
   BadRequestException,
   Injectable,
@@ -75,12 +69,14 @@ export class PenjualanService {
         include: {
           user: {
             select: {
+              id: true,
               name: true,
               role: true,
             },
           },
           produk: {
             select: {
+              id: true,
               nama: true,
               harga: true,
               stock: true,

@@ -18,8 +18,19 @@ async function main() {
       role: 'ADMIN',
     },
   });
+  const hashedPasswordBackup = await bcrypt.hash('adminbackup', 10);
+  const adminBackup = await prisma.user.upsert({
+    where: { username: 'adminbackup' },
+    update: {},
+    create: {
+      name: 'Hery Setiawan',
+      username: 'adminbackup',
+      password: hashedPasswordBackup,
+      role: 'ADMIN',
+    },
+  });
 
-  console.log(admin);
+  console.log({ admin, adminBackup });
 }
 
 main()

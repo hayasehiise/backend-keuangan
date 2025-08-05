@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import {
@@ -13,7 +11,8 @@ export class ProdukService {
   constructor(private prisma: PrismaService) {}
 
   async create(rawData: CreateProdukDto) {
-    await this.prisma.produk.create({ data: rawData });
+    const status = rawData.stock <= 0 ? 'HABIS' : 'TERSEDIA';
+    await this.prisma.produk.create({ data: { ...rawData, status } });
 
     return {
       message: 'data produk berhasil diinput',
