@@ -6,7 +6,6 @@ import {
   Get,
   Post,
   Request,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './jwt.service';
@@ -15,7 +14,6 @@ import {
   // RegisterScheme
 } from './dto/auth.dto';
 import { JwtAuthGuard } from './jwt.guard';
-import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -29,20 +27,15 @@ export class AuthController {
   // }
 
   @Post('login')
-  async login(@Body() body: any, @Res({ passthrough: true }) res: Response) {
+  async login(@Body() body: any) {
     const parsed = LoginScheme.safeParse(body);
     if (!parsed.success) throw parsed.error;
-    const result = await this.authService.login(parsed.data, res);
+    const result = await this.authService.login(parsed.data);
     return result;
   }
 
-  @Post('logout')
-  logout(@Res({ passthrough: true }) res: Response) {
-    return this.authService.logout(res);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get('active')
+  @UseGuards(JwtAuthGuard)
   getActive(@Request() req: any) {
     return req.user;
   }

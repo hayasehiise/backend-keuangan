@@ -7,12 +7,14 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private configService: ConfigService,
   ) {}
   async register(data: RegisterDto) {
     const exist = await this.prisma.user.findUnique({
@@ -37,7 +39,7 @@ export class AuthService {
       user: { id: user.id, usernname: user.username, role: user.role },
     };
   }
-  async login(data: LoginDto, res: Response) {
+  async login(data: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: { username: data.username },
     });
@@ -53,35 +55,14 @@ export class AuthService {
       role: user.role,
     });
 
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      secure: false, //rubah ke true kalau mau production
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24,
-      path: '/',
-    });
-
     return {
-      message: 'berhasil login',
+      accessToken: token,
       user: {
         id: user.id,
         name: user.name,
         username: user.username,
         role: user.role,
       },
-    };
-  }
-
-  logout(res: Response) {
-    res.clearCookie('access_token', {
-      httpOnly: true,
-      secure: false, //nanti rubah ke true ketika production
-      sameSite: 'lax',
-      path: '/',
-    });
-
-    return {
-      message: 'berhasil logout',
     };
   }
 }
