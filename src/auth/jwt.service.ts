@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -39,7 +36,7 @@ export class AuthService {
       user: { id: user.id, usernname: user.username, role: user.role },
     };
   }
-  async login(data: LoginDto) {
+  async login(data: LoginDto, res: Response) {
     const user = await this.prisma.user.findUnique({
       where: { username: data.username },
     });
@@ -55,8 +52,16 @@ export class AuthService {
       role: user.role,
     });
 
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: this.configService.get<boolean>('APP_PRODUCTION'),
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
     return {
-      accessToken: token,
+      // accessToken: token,
+      message: 'Berhasil Login',
       user: {
         id: user.id,
         name: user.name,
