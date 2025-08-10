@@ -52,8 +52,22 @@ export class AuthService {
       role: user.role,
     });
 
+    const userData = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      role: user.role,
+    };
+
     res.cookie('access_token', token, {
       httpOnly: true,
+      secure: this.configService.get<boolean>('APP_PRODUCTION'),
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    res.cookie('user_data', JSON.stringify(userData), {
+      httpOnly: false,
       secure: this.configService.get<boolean>('APP_PRODUCTION'),
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24,
