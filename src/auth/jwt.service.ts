@@ -66,13 +66,6 @@ export class AuthService {
       maxAge: 1000 * 60 * 60 * 24,
     });
 
-    res.cookie('user_data', JSON.stringify(userData), {
-      httpOnly: false,
-      secure: this.configService.get<boolean>('APP_PRODUCTION'),
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
-
     return {
       // accessToken: token,
       message: 'Berhasil Login',
