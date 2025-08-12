@@ -52,13 +52,6 @@ export class AuthService {
       role: user.role,
     });
 
-    const userData = {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      role: user.role,
-    };
-
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: this.configService.get<boolean>('APP_PRODUCTION'),

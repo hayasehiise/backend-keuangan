@@ -21,13 +21,6 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Post('register')
-  // async register(@Body() body: any) {
-  //   const parsed = RegisterScheme.safeParse(body);
-  //   if (!parsed.success) throw parsed.error;
-  //   return this.authService.register(parsed.data);
-  // }
-
   @Post('login')
   async login(@Body() body: any, @Res({ passthrough: true }) res: Response) {
     const parsed = LoginScheme.safeParse(body);
@@ -48,4 +41,12 @@ export class AuthController {
   getActive(@Request() req: any) {
     return req.user;
   }
+
+  // @Post('register')
+  // @UseGuards(JwtAuthGuard)
+  // async register(@Body() body: any) {
+  //   const parsed = RegisterScheme.safeParse(body);
+  //   if (!parsed.success) throw parsed.error;
+  //   return this.authService.register(parsed.data);
+  // }
 }

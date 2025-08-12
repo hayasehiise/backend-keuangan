@@ -86,7 +86,7 @@ export class UserService {
   }
 
   async getUsers(query: QueryUserDto, currentUser: any) {
-    const { page, limit } = query;
+    const { page, limit, search } = query;
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
@@ -101,9 +101,13 @@ export class UserService {
           role: true,
           createdAt: true,
         },
-        where: {
-          NOT: { id: currentUser.id },
-        },
+        where: search
+          ? { name: { contains: search }, NOT: { id: currentUser.id } }
+          : { NOT: { id: currentUser.id } },
+        // where: {
+        //   search ? name: {contains: search} : {},
+        //   NOT: { id: currentUser.id },
+        // },
       }),
       this.prisma.user.count({ where: { NOT: { id: currentUser.id } } }),
     ]);

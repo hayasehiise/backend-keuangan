@@ -10,20 +10,12 @@ export const UserScheme = z.object({
 export const CreateUserScheme = UserScheme;
 export type CreateUserDto = z.infer<typeof CreateUserScheme>;
 
-export const UpdateUserScheme = UserScheme;
+export const UpdateUserScheme = UserScheme.partial();
 export type UpdateUserDto = z.infer<typeof UpdateUserScheme>;
 
 export const QueryUserScheme = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().optional(),
 });
 export type QueryUserDto = z.infer<typeof QueryUserScheme>;
-// export class GetUserDto {
-//   @IsOptional()
-//   @IsNumberString()
-//   page?: string;
-
-//   @IsOptional()
-//   @IsNumberString()
-//   limit?: string;
-// }
