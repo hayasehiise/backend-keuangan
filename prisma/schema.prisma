@@ -20,9 +20,11 @@ model User {
   role      Role     @default(KASIR)
   name      String
   createdAt DateTime @default(now())
+  tokoId    String?
 
   penjualan   Penjualan[]
   Pengeluaran Pengeluaran[]
+  toko        Toko?         @relation(fields: [tokoId], references: [id])
 }
 
 enum Role {
@@ -31,15 +33,26 @@ enum Role {
   KASIR
 }
 
+model Toko {
+  id        String   @id @default(uuid()) @db.Char(36)
+  nama      String
+  createdAt DateTime @default(now())
+
+  users  User[]
+  produk Produk[]
+}
+
 model Produk {
   id        String        @id @default(uuid()) @db.Char(36)
   nama      String
   harga     Int
   stock     Int
   status    Produk_Status
+  tokoId    String
   createdAt DateTime      @default(now())
 
   penjualan Penjualan[]
+  toko      Toko        @relation(fields: [tokoId], references: [id])
 }
 
 enum Produk_Status {

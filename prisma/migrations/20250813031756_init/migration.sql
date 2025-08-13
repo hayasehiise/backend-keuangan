@@ -6,8 +6,18 @@ CREATE TABLE `User` (
     `role` ENUM('ADMIN', 'OWNER', 'KASIR') NOT NULL DEFAULT 'KASIR',
     `name` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `tokoId` VARCHAR(191) NULL,
 
     UNIQUE INDEX `User_username_key`(`username`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Toko` (
+    `id` CHAR(36) NOT NULL,
+    `nama` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -18,6 +28,7 @@ CREATE TABLE `Produk` (
     `harga` INTEGER NOT NULL,
     `stock` INTEGER NOT NULL,
     `status` ENUM('TERSEDIA', 'HABIS') NOT NULL,
+    `tokoId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -42,6 +53,7 @@ CREATE TABLE `Penjualan` (
 CREATE TABLE `JenisPengeluaran` (
     `id` CHAR(36) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -54,6 +66,7 @@ CREATE TABLE `Pengeluaran` (
     `nominal` INTEGER NOT NULL,
     `createdBy` VARCHAR(191) NOT NULL,
     `detailPencatatan` LONGTEXT NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -73,6 +86,12 @@ CREATE TABLE `ArusKas` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `User` ADD CONSTRAINT `User_tokoId_fkey` FOREIGN KEY (`tokoId`) REFERENCES `Toko`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Produk` ADD CONSTRAINT `Produk_tokoId_fkey` FOREIGN KEY (`tokoId`) REFERENCES `Toko`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Penjualan` ADD CONSTRAINT `Penjualan_produkId_fkey` FOREIGN KEY (`produkId`) REFERENCES `Produk`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

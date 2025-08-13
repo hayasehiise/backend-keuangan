@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PrismaClient, Produk_Status } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -28,16 +25,6 @@ async function main() {
       password: hashedPasswordBackup,
       role: 'ADMIN',
     },
-  });
-  const products = Array.from({ length: 100 }).map((_, i) => ({
-    nama: `Produk ${i + 1}`,
-    harga: Math.floor(Math.random() * 100000) + 1000, // harga acak 1.000 - 100.000
-    stock: Math.floor(Math.random() * 100), // stok acak 0 - 99
-    status: Produk_Status.TERSEDIA,
-  }));
-
-  await prisma.produk.createMany({
-    data: products,
   });
 
   // console.log({ admin, adminBackup });

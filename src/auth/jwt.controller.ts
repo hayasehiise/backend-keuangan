@@ -12,6 +12,7 @@ import {
 import { AuthService } from './jwt.service';
 import {
   LoginScheme,
+  LoginDto,
   // RegisterScheme
 } from './dto/auth.dto';
 import { JwtAuthGuard } from './jwt.guard';
@@ -22,7 +23,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() body: any, @Res({ passthrough: true }) res: Response) {
+  async login(
+    @Body() body: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const parsed = LoginScheme.safeParse(body);
     if (!parsed.success) throw parsed.error;
     const result = await this.authService.login(parsed.data, res);

@@ -14,6 +14,9 @@ import {
   CreatePenjualanScheme,
   UpdatePenjualanScheme,
   QueryPenjualanScheme,
+  CreatePenjualanDto,
+  QueryPenjualanDto,
+  UpdatePenjualanDto,
 } from './dto/penjualan.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
@@ -23,19 +26,19 @@ export class PenjualanController {
   constructor(private readonly penjualanService: PenjualanService) {}
 
   @Post()
-  create(@Body() body: unknown) {
+  create(@Body() body: CreatePenjualanDto) {
     const parsed = CreatePenjualanScheme.parse(body);
     return this.penjualanService.create(parsed);
   }
 
   @Get()
-  getPenjualan(@Query() rawQuery: unknown) {
+  getPenjualan(@Query() rawQuery: QueryPenjualanDto) {
     const queries = QueryPenjualanScheme.parse(rawQuery);
     return this.penjualanService.getPenjualan(queries);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: unknown) {
+  update(@Param('id') id: string, @Body() body: UpdatePenjualanDto) {
     const parsed = UpdatePenjualanScheme.parse(body);
     return this.penjualanService.update(id, parsed);
   }

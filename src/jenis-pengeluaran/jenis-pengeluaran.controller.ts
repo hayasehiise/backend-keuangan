@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { JenisPengeluaranService } from './jenis-pengeluaran.service';
 import {
+  CreateJenisPengeluaranDto,
   CreateJenisPengeluaranScheme,
+  QueryJenisPengeluaranDto,
   QueryJenisPengeluaranScheme,
 } from './dto/jenis-pengeluaran.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
@@ -23,7 +25,7 @@ export class JenisPengeluaranController {
   ) {}
 
   @Post()
-  create(@Body() body: unknown) {
+  create(@Body() body: CreateJenisPengeluaranDto) {
     const parsed = CreateJenisPengeluaranScheme.parse(body);
     return this.jenisPengeluaranService.create(parsed);
   }
@@ -33,7 +35,7 @@ export class JenisPengeluaranController {
   }
 
   @Get()
-  getData(@Query() rawQuery: unknown) {
+  getData(@Query() rawQuery: QueryJenisPengeluaranDto) {
     const queries = QueryJenisPengeluaranScheme.parse(rawQuery);
     return this.jenisPengeluaranService.getData(queries);
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import {
@@ -20,15 +21,30 @@ export class ProdukService {
     };
   }
 
-  async getProduk(query: QueryProdukDto) {
-    const { page, limit, search } = query;
+  async getProduk(query: QueryProdukDto, user: any) {
+    const { page, limit, search, tokoId } = query;
     const skip = (page - 1) * limit;
+    const where = {
+      ...(user.role !== 'ADMIN' && tokoId && { tokoId }),
+      ...(search && {
+        nama: {
+          contains: search,
+        },
+      }),
+    };
 
     const [data, total] = await Promise.all([
       this.prisma.produk.findMany({
-        where: search ? { nama: { contains: search } } : {},
+        where,
         skip,
         take: limit,
+        include: {
+          toko: {
+            select: {
+              nama: true,
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.produk.count(),

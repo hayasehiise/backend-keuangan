@@ -5,6 +5,7 @@ import { ProdukModule } from './produk/produk.module';
 import { PenjualanModule } from './penjualan/penjualan.module';
 import { JenisPengeluaranModule } from './jenis-pengeluaran/jenis-pengeluaran.module';
 import { ConfigModule } from '@nestjs/config';
+import { TokoModule } from './toko/toko.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     ProdukModule,
     PenjualanModule,
     JenisPengeluaranModule,
+    TokoModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

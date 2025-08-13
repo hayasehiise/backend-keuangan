@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
+import { LoginDto } from './dto/auth.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
@@ -13,29 +13,7 @@ export class AuthService {
     private jwt: JwtService,
     private configService: ConfigService,
   ) {}
-  async register(data: RegisterDto) {
-    const exist = await this.prisma.user.findUnique({
-      where: {
-        username: data.username,
-      },
-    });
-    if (exist) throw new Error('username telah digunakan');
 
-    const hashed = await bcrypt.hash(data.password, 10);
-    const user = await this.prisma.user.create({
-      data: {
-        name: data.name,
-        username: data.username,
-        password: hashed,
-        role: data.role,
-      },
-    });
-
-    return {
-      message: 'Berhasil Register',
-      user: { id: user.id, usernname: user.username, role: user.role },
-    };
-  }
   async login(data: LoginDto, res: Response) {
     const user = await this.prisma.user.findUnique({
       where: { username: data.username },
@@ -60,7 +38,6 @@ export class AuthService {
     });
 
     return {
-      // accessToken: token,
       message: 'Berhasil Login',
       user: {
         id: user.id,

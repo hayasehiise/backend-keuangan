@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Get,
   Post,
@@ -8,12 +10,16 @@ import {
   Param,
   Controller,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProdukService } from './produk.service';
 import {
   CreateProdukScheme,
   UpdateProdukScheme,
   QueryProdukScheme,
+  QueryProdukDto,
+  CreateProdukDto,
+  UpdateProdukDto,
 } from './dto/produk.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 
@@ -23,15 +29,16 @@ export class ProdukController {
   constructor(private readonly produkService: ProdukService) {}
 
   @Post()
-  create(@Body() body: unknown) {
+  create(@Body() body: CreateProdukDto) {
     const parsed = CreateProdukScheme.parse(body);
     return this.produkService.create(parsed);
   }
 
   @Get()
-  getProduk(@Query() rawQuery: unknown) {
+  getProduk(@Query() rawQuery: QueryProdukDto, @Req() req: any) {
     const query = QueryProdukScheme.parse(rawQuery);
-    return this.produkService.getProduk(query);
+    const user = req.user;
+    return this.produkService.getProduk(query, user);
   }
 
   @Get(':id')
@@ -40,7 +47,7 @@ export class ProdukController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: unknown) {
+  update(@Param('id') id: string, @Body() body: UpdateProdukDto) {
     const parsed = UpdateProdukScheme.parse(body);
     return this.produkService.update(id, parsed);
   }

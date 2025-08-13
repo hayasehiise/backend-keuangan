@@ -26,8 +26,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         },
       ]),
       ignoreExpiration: false,
-      // secretOrKey: process.env.JWT_SECRET,
-      secretOrKey: configService.get<string>('JWT_SECRET'),
+      secretOrKey: process.env.JWT_SECRET,
+      // secretOrKey: configService.get<string>('JWT_SECRET'),
     });
   }
 
@@ -45,6 +45,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       name: user.name,
       username: user.username,
       role: user.role,
+      tokoId: user.tokoId,
     };
   }
 }

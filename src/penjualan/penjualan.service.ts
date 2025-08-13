@@ -69,14 +69,12 @@ export class PenjualanService {
         include: {
           user: {
             select: {
-              id: true,
               name: true,
               role: true,
             },
           },
           produk: {
             select: {
-              id: true,
               nama: true,
               harga: true,
               stock: true,
