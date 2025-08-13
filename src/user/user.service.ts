@@ -135,12 +135,11 @@ export class UserService {
         orderBy: { createdAt: 'desc' },
         select,
         where: search
-          ? { name: { contains: search }, NOT: { id: currentUser.id } }
+          ? {
+              name: { contains: search },
+              NOT: { id: currentUser.id },
+            }
           : { NOT: { id: currentUser.id } },
-        // where: {
-        //   search ? name: {contains: search} : {},
-        //   NOT: { id: currentUser.id },
-        // },
       }),
       this.prisma.user.count({ where: { NOT: { id: currentUser.id } } }),
     ]);

@@ -33,16 +33,19 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Roles('ADMIN')
   @Get('all')
   findAll() {
     return this.userService.findAll();
   }
 
+  @Roles('ADMIN')
   @Get(':username')
   findByUsername(@Param('username') username: string) {
     return this.userService.findByUsername(username);
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   findById(@Param('id') id: string) {
     return this.userService.findById(id);
@@ -63,7 +66,7 @@ export class UserController {
     return this.userService.update(id, parsed.data);
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'OWNER')
   @Get()
   getUsers(@Query() rawQuery: unknown, @Req() req: any) {
     const query = QueryUserScheme.parse(rawQuery);

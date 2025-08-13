@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Controller,
   Get,
@@ -8,6 +10,7 @@ import {
   Param,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { PenjualanService } from './penjualan.service';
 import {
@@ -26,15 +29,17 @@ export class PenjualanController {
   constructor(private readonly penjualanService: PenjualanService) {}
 
   @Post()
-  create(@Body() body: CreatePenjualanDto) {
+  create(@Body() body: CreatePenjualanDto, @Req() req: any) {
     const parsed = CreatePenjualanScheme.parse(body);
-    return this.penjualanService.create(parsed);
+    const user = req.user;
+    return this.penjualanService.create(parsed, user);
   }
 
   @Get()
-  getPenjualan(@Query() rawQuery: QueryPenjualanDto) {
+  getPenjualan(@Query() rawQuery: QueryPenjualanDto, @Req() req: any) {
     const queries = QueryPenjualanScheme.parse(rawQuery);
-    return this.penjualanService.getPenjualan(queries);
+    const user = req.user;
+    return this.penjualanService.getPenjualan(queries, user);
   }
 
   @Put(':id')

@@ -29,9 +29,10 @@ export class ProdukController {
   constructor(private readonly produkService: ProdukService) {}
 
   @Post()
-  create(@Body() body: CreateProdukDto) {
+  create(@Body() body: CreateProdukDto, @Req() req: any) {
     const parsed = CreateProdukScheme.parse(body);
-    return this.produkService.create(parsed);
+    const user = req.user;
+    return this.produkService.create(parsed, user);
   }
 
   @Get()

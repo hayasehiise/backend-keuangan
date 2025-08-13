@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   BadRequestException,
   Injectable,
@@ -20,11 +23,10 @@ export class PenjualanService {
     return hargaTotal - potongan;
   }
 
-  async create(rawData: CreatePenjualanDto) {
+  async create(rawData: CreatePenjualanDto, user: any) {
     const produk = await this.prisma.produk.findUnique({
       where: { id: rawData.produkId },
     });
-
     if (!produk) throw new NotFoundException('Produk Tidak Ditemukan');
     if (produk.stock < rawData.quantity)
       throw new BadRequestException('Stock Produk anda tidak cukup');
@@ -48,6 +50,7 @@ export class PenjualanService {
           ...rawData,
           harga,
           total,
+          createdBy: user.id,
         },
       });
 
@@ -58,14 +61,19 @@ export class PenjualanService {
     });
   }
 
-  async getPenjualan(query: QueryPenjualanDto) {
+  async getPenjualan(query: QueryPenjualanDto, user: any) {
     const { page, limit } = query;
     const skip = (page - 1) * limit;
+    const where = {
+      ...(user.role !== 'ADMIN' &&
+        user.tokoId && { user: { tokoId: user.tokoId } }),
+    };
 
     const [data, total] = await Promise.all([
       this.prisma.penjualan.findMany({
         skip,
         take: limit,
+        where,
         include: {
           user: {
             select: {

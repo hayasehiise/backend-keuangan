@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
@@ -11,9 +12,10 @@ import {
 export class ProdukService {
   constructor(private prisma: PrismaService) {}
 
-  async create(rawData: CreateProdukDto) {
+  async create(rawData: CreateProdukDto, user: any) {
     const status = rawData.stock <= 0 ? 'HABIS' : 'TERSEDIA';
-    await this.prisma.produk.create({ data: { ...rawData, status } });
+    const tokoId = user.tokoId;
+    await this.prisma.produk.create({ data: { ...rawData, status, tokoId } });
 
     return {
       message: 'data produk berhasil diinput',
@@ -22,15 +24,15 @@ export class ProdukService {
   }
 
   async getProduk(query: QueryProdukDto, user: any) {
-    const { page, limit, search, tokoId } = query;
+    const { page, limit, search } = query;
     const skip = (page - 1) * limit;
     const where = {
-      ...(user.role !== 'ADMIN' && tokoId && { tokoId }),
       ...(search && {
         nama: {
           contains: search,
         },
       }),
+      ...(user.role !== 'ADMIN' && user.tokoId && { tokoId: user.tokoId }),
     };
 
     const [data, total] = await Promise.all([
