@@ -54,6 +54,7 @@ export class TokoController {
     return this.tokoService.getToko(query);
   }
 
+  @Roles('ADMIN')
   @Get('/list')
   getTokoList() {
     return this.tokoService.getTokoList();
