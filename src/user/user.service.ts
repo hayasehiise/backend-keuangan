@@ -115,7 +115,7 @@ export class UserService {
       createdAt: true,
     };
     const select =
-      currentUser.role === 'OWNER' || currentUser.role === 'KASIR'
+      currentUser.role === 'OWNER' || currentUser.role === 'ADMIN'
         ? {
             ...baseSelect,
             toko: {
