@@ -60,6 +60,24 @@ export class ProdukService {
     };
   }
 
+  async getByTokoId(tokoId: string) {
+    const data = await this.prisma.produk.findMany({
+      where: { tokoId },
+      select: {
+        id: true,
+        nama: true,
+        harga: true,
+        stock: true,
+        status: true,
+      },
+      orderBy: { nama: 'asc' },
+    });
+
+    return {
+      data,
+    };
+  }
+
   findOne(id: string) {
     return this.prisma.produk.findUnique({ where: { id } });
   }

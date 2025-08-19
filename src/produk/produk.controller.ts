@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
@@ -40,6 +41,11 @@ export class ProdukController {
     const query = QueryProdukScheme.parse(rawQuery);
     const user = req.user;
     return this.produkService.getProduk(query, user);
+  }
+
+  @Get('list')
+  getByTokoId(@Req() req: any) {
+    return this.produkService.getByTokoId(req.user.tokoId);
   }
 
   @Get(':id')

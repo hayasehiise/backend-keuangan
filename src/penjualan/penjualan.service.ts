@@ -62,9 +62,16 @@ export class PenjualanService {
   }
 
   async getPenjualan(query: QueryPenjualanDto, user: any) {
-    const { page, limit } = query;
+    const { page, limit, search } = query;
     const skip = (page - 1) * limit;
     const where = {
+      ...(search && {
+        produk: {
+          nama: {
+            contains: search,
+          },
+        },
+      }),
       ...(user.role !== 'ADMIN' &&
         user.tokoId && { user: { tokoId: user.tokoId } }),
     };
