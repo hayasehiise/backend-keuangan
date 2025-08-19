@@ -65,9 +65,17 @@ export class ProdukService {
   }
 
   async update(id: string, rawData: UpdateProdukDto) {
+    const updateData: any = { ...rawData };
+
+    // Hanya update status jika stock ada di rawData
+    if (rawData.stock !== undefined) {
+      const status = rawData.stock <= 0 ? 'HABIS' : 'TERSEDIA';
+      updateData.status = status;
+    }
+
     await this.prisma.produk.update({
       where: { id },
-      data: rawData,
+      data: updateData,
     });
 
     return {
