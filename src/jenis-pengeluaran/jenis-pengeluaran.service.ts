@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   Injectable,
   //   BadRequestException,
@@ -44,12 +41,16 @@ export class JenisPengeluaranService {
   }
 
   async getData(query: QueryJenisPengeluaranDto) {
-    const { page, limit } = query;
+    const { page, limit, search } = query;
     const skip = (page - 1) * limit;
+    const where = {
+      ...(search ? { name: { contains: search } } : {}),
+    };
 
     const [data, total] = await Promise.all([
       this.prisma.jenisPengeluaran.findMany({
         skip,
+        where,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
@@ -62,6 +63,16 @@ export class JenisPengeluaranService {
       page,
       limit,
       totalPage: Math.ceil(total / limit),
+    };
+  }
+
+  async getList() {
+    const data = await this.prisma.jenisPengeluaran.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return {
+      data,
     };
   }
 }

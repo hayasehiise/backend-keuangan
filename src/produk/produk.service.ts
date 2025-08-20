@@ -61,8 +61,9 @@ export class ProdukService {
   }
 
   async getByTokoId(tokoId: string) {
+    const where = tokoId ? { tokoId } : {};
     const data = await this.prisma.produk.findMany({
-      where: { tokoId },
+      where,
       select: {
         id: true,
         nama: true,

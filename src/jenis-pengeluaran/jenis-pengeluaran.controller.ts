@@ -16,6 +16,7 @@ import {
   QueryJenisPengeluaranScheme,
 } from './dto/jenis-pengeluaran.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('jenis-pengeluaran')
@@ -24,11 +25,14 @@ export class JenisPengeluaranController {
     private readonly jenisPengeluaranService: JenisPengeluaranService,
   ) {}
 
+  @Roles('ADMIN')
   @Post()
   create(@Body() body: CreateJenisPengeluaranDto) {
     const parsed = CreateJenisPengeluaranScheme.parse(body);
     return this.jenisPengeluaranService.create(parsed);
   }
+
+  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.jenisPengeluaranService.remove(id);
@@ -38,5 +42,10 @@ export class JenisPengeluaranController {
   getData(@Query() rawQuery: QueryJenisPengeluaranDto) {
     const queries = QueryJenisPengeluaranScheme.parse(rawQuery);
     return this.jenisPengeluaranService.getData(queries);
+  }
+
+  @Get('list')
+  getList() {
+    return this.jenisPengeluaranService.getList();
   }
 }

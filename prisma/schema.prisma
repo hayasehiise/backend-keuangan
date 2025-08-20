@@ -83,15 +83,16 @@ model JenisPengeluaran {
 }
 
 model Pengeluaran {
-  id                 String           @id @default(uuid()) @db.Char(36)
-  jenisPengeluaran   JenisPengeluaran @relation(fields: [jenisPengeluaranId], references: [id])
+  id                 String   @id @default(uuid()) @db.Char(36)
   jenisPengeluaranId String
   date               DateTime
   nominal            Int
-  user               User             @relation(fields: [createdBy], references: [id])
+  user               User     @relation(fields: [createdBy], references: [id])
   createdBy          String
-  detailPencatatan   String           @db.LongText
-  createdAt          DateTime         @default(now())
+  detailPencatatan   String   @db.LongText
+  createdAt          DateTime @default(now())
+
+  jenisPengeluaran JenisPengeluaran @relation(fields: [jenisPengeluaranId], references: [id])
 }
 
 model ArusKas {
