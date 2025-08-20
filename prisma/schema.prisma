@@ -87,11 +87,11 @@ model Pengeluaran {
   jenisPengeluaranId String
   date               DateTime
   nominal            Int
-  user               User     @relation(fields: [createdBy], references: [id])
   createdBy          String
   detailPencatatan   String   @db.LongText
   createdAt          DateTime @default(now())
 
+  user             User             @relation(fields: [createdBy], references: [id])
   jenisPengeluaran JenisPengeluaran @relation(fields: [jenisPengeluaranId], references: [id])
 }
 

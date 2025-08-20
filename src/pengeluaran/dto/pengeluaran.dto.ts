@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 const baseSceheme = z.object({
-  jenisPengeluaranId: z.uuid(),
+  jenisPengeluaranId: z.string(),
   date: z.iso.datetime(),
   nominal: z.number().int().nonnegative(),
-  createdBy: z.uuid(),
+  detailPencatatan: z.string().min(1).max(500).optional(),
 });
 
 export const CreatePengeluaranScheme = baseSceheme;
