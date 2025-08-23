@@ -45,14 +45,14 @@ export class PengeluaranController {
     return this.pengeluaranService.getPengeluaran(queries, user);
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'OWNER')
   @Put(':id')
   update(@Param('id') id: string, @Body() body: UpdatePengeluaranDto) {
     const parsed = UpdatePengeluaranScheme.parse(body);
     return this.pengeluaranService.update(id, parsed);
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'OWNER')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.pengeluaranService.remove(id);

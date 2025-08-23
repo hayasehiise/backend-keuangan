@@ -32,7 +32,7 @@ export class PengeluaranService {
     const skip = (page - 1) * limit;
     const where = {
       ...(search ? { jenisPengeluaran: { name: { contains: search } } } : {}),
-      createdBy: user.id,
+      ...(user.role !== 'ADMIN' ? { createdBy: user.id } : {}),
     };
 
     const [data, total] = await Promise.all([

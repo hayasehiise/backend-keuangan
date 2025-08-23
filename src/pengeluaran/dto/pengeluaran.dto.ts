@@ -4,7 +4,7 @@ const baseSceheme = z.object({
   jenisPengeluaranId: z.string(),
   date: z.iso.datetime(),
   nominal: z.number().int().nonnegative(),
-  detailPencatatan: z.string().min(1).max(500).optional(),
+  detailPencatatan: z.string().max(500).optional(),
 });
 
 export const CreatePengeluaranScheme = baseSceheme;
